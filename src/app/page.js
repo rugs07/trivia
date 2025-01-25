@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import nookies from "nookies";
+import './globals.css'
 
 
 export default function Home() {
@@ -17,7 +18,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-400 to-blue-500 text-white">
+    <main className="main-container flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-400 to-blue-500 text-white">
       <h1 className="text-4xl font-bold mb-6 text-center">Welcome to GeoExplorer Trivia</h1>
 
       {lastScore ? (
