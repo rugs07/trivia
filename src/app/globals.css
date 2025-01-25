@@ -19,3 +19,55 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+/* Fullscreen loading container */
+.loading-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;  /* Full height of the viewport */
+  width: 100vw;   /* Full width of the viewport */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;   /* Make sure it's on top of other content */
+  background-color: rgba(0, 0, 0, 0.5);  /* Optional: Add a dark background overlay */
+}
+
+.square {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  animation: colorChange 1.5s linear infinite;
+}
+
+.square:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.square:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.square:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.square:nth-child(4) {
+  animation-delay: 0.9s;
+}
+
+.square:nth-child(5) {
+  animation-delay: 1.2s;
+}
+
+@keyframes colorChange {
+  0%, 100% {
+    background-color: white;
+  }
+  50% {
+    background-color: black;
+  }
+}
