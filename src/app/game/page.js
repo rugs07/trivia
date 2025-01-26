@@ -178,7 +178,7 @@ const GamePage = () => {
       {loading && <Loading />}
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500">
         <div className="bg-white shadow-2xl rounded-xl p-6 w-full max-w-md mt-[70px]">
-          <h2 className="text-2xl font-semibold text-gray-800 text-center">
+          <h2 className="text-2xl font-semibold text-gray-800 text-center mb-2">
             Guess the Country!
           </h2>
           {difficulty !== "easy" && (
