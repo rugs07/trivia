@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import nookies from "nookies";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
@@ -13,6 +13,9 @@ import {
 const DashboardPage = () => {
   const [score, setScore] = useState(0);
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
+  const [highestScore, setHighestScore] = useState(0);
+  const [averageScore, setAverageScore] = useState(0);
+  const [lastGameDate, setLastGameDate] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Dummy leaderboard data
@@ -22,6 +25,7 @@ const DashboardPage = () => {
     { name: "Charlie", score: 350, rank: 3 },
     { name: "David", score: 300, rank: 4 },
     { name: "Eve", score: 280, rank: 5 },
+    { name: "You", score, rank: 6 }, 
   ];
 
   const columns = [
@@ -46,9 +50,18 @@ const DashboardPage = () => {
     const cookies = nookies.get();
     const savedScore = parseInt(cookies.coins || "0", 10); // Get score from cookies
     const answered = parseInt(cookies.questionsAnswered || "0", 10);
+    const savedHighestScore = parseInt(cookies.highestScore || "0", 10);
+    const savedLastGameDate = cookies.lastGameDate || null;
 
     setScore(savedScore);
     setQuestionsAnswered(answered);
+    setHighestScore(savedHighestScore);
+    setLastGameDate(savedLastGameDate ? new Date(savedLastGameDate) : null);
+
+    // Calculate average score (for demo purposes)
+    if (answered > 0) {
+      setAverageScore((savedScore / answered).toFixed(2));
+    }
   }, []);
 
   const resetProgress = () => {
@@ -68,8 +81,15 @@ const DashboardPage = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setScore(0);
-        toast.success("Score Reset Successfully");
+        setQuestionsAnswered(0);
+        setHighestScore(0);
+        setAverageScore(0);
+        setLastGameDate(null);
+        toast.success("Progress Reset Successfully");
         nookies.set(null, "coins", 0, { path: "/" });
+        nookies.set(null, "questionsAnswered", 0, { path: "/" });
+        nookies.set(null, "highestScore", 0, { path: "/" });
+        nookies.set(null, "lastGameDate", null, { path: "/" });
       }
     });
   };
@@ -79,18 +99,29 @@ const DashboardPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-500 flex flex-col items-center justify-center pt-10">
       <h1 className="text-4xl font-bold text-white mt-3 mb-3">Dashboard</h1>
-      <div className="flex gap-2 w-full p-2">
-        <div className="bg-white p-8 rounded-xl shadow-2xl w-full md:w-1/3">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            Your Stats
-          </h2>
+      <div className="flex gap-4 w-full p-4">
+        {/* User Stats Card */}
+        <div className="bg-white p-8 rounded-xl shadow-lg w-full md:w-1/3 transition-transform transform hover:-translate-y-1 hover:shadow-xl">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Your Stats</h2>
           <p className="text-lg text-gray-700 mb-4">
             <strong>Current Score:</strong>{" "}
             <span className="text-blue-600">{score}</span>
           </p>
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-gray-700 mb-4">
             <strong>Questions Answered:</strong>{" "}
             <span className="text-green-600">{questionsAnswered}</span>
+          </p>
+          <p className="text-lg text-gray-700 mb-4">
+            <strong>Highest Score:</strong>{" "}
+            <span className="text-yellow-600">{highestScore}</span>
+          </p>
+          <p className="text-lg text-gray-700 mb-4">
+            <strong>Average Score:</strong>{" "}
+            <span className="text-purple-600">{averageScore}</span>
+          </p>
+          <p className="text-lg text-gray-700 mb-6">
+            <strong>Last Game Date:</strong>{" "}
+            <span className="text-gray-600">{lastGameDate ? lastGameDate.toLocaleDateString() : 'N/A'}</span>
           </p>
           <button
             onClick={resetProgress}
@@ -100,10 +131,9 @@ const DashboardPage = () => {
           </button>
         </div>
 
-        <div className="bg-white p-8 rounded-xl shadow-2xl w-full  md:w-2/3">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            Leaderboard
-          </h2>
+        {/* Leaderboard Card */}
+        <div className="bg-white p-8 rounded-xl shadow-lg w-full md:w-2/3 transition-transform transform hover:-translate-y-1 hover:shadow-xl">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Leaderboard</h2>
 
           <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300 text-left">
@@ -127,9 +157,9 @@ const DashboardPage = () => {
                 {tableRows.map((row) => (
                   <tr
                     key={row.id}
-                    className={
-                      row.original.name === "Alice" ? "bg-blue-100" : ""
-                    }
+                    className={`transition-colors duration-200 ${
+                      row.original.name === "You" ? "bg-blue-100" : ""
+                    } hover:bg-gray-50`}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
