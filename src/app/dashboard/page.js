@@ -12,20 +12,17 @@ import {
 
 const DashboardPage = () => {
   const [score, setScore] = useState(0);
-  const [questionsAnswered, setQuestionsAnswered] = useState(0);
-  const [highestScore, setHighestScore] = useState(0);
-  const [averageScore, setAverageScore] = useState(0);
-  const [lastGameDate, setLastGameDate] = useState(null);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Dummy leaderboard data
   const dummyLeaderboard = [
-    { name: "Alice", score: 450, rank: 1 },
-    { name: "Bob", score: 400, rank: 2 },
-    { name: "Charlie", score: 350, rank: 3 },
-    { name: "David", score: 300, rank: 4 },
-    { name: "Eve", score: 280, rank: 5 },
-    { name: "You", score, rank: 6 }, 
+    { name: "Rohan", score: 450, rank: 1 },
+    { name: "Sreenivas", score: 400, rank: 2 },
+    { name: "Sarthak", score: 350, rank: 3 },
+    { name: "John", score: 300, rank: 4 },
+    { name: "Kiara", score: 280, rank: 5 },
+    { name: "You", score, rank: 6 },
   ];
 
   const columns = [
@@ -53,10 +50,15 @@ const DashboardPage = () => {
     const savedHighestScore = parseInt(cookies.highestScore || "0", 10);
     const savedLastGameDate = cookies.lastGameDate || null;
 
+    // Retrieve correct and incorrect answers
+    const savedCorrectAnswers = parseInt(cookies.correctAnswers || "0", 10);
+    const savedIncorrectAnswers = parseInt(cookies.incorrectAnswers || "0", 10);
+
     setScore(savedScore);
-    setQuestionsAnswered(answered);
-    setHighestScore(savedHighestScore);
-    setLastGameDate(savedLastGameDate ? new Date(savedLastGameDate) : null);
+
+    // Set correct and incorrect answers
+    setCorrectAnswers(savedCorrectAnswers);
+    setIncorrectAnswers(savedIncorrectAnswers);
 
     // Calculate average score (for demo purposes)
     if (answered > 0) {
@@ -81,15 +83,15 @@ const DashboardPage = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setScore(0);
-        setQuestionsAnswered(0);
-        setHighestScore(0);
-        setAverageScore(0);
-        setLastGameDate(null);
+        setCorrectAnswers(0);
+        setIncorrectAnswers(0);
         toast.success("Progress Reset Successfully");
         nookies.set(null, "coins", 0, { path: "/" });
         nookies.set(null, "questionsAnswered", 0, { path: "/" });
         nookies.set(null, "highestScore", 0, { path: "/" });
         nookies.set(null, "lastGameDate", null, { path: "/" });
+        nookies.set(null, "correctAnswers", 0, { path: "/" });
+        nookies.set(null, "incorrectAnswers", 0, { path: "/" });
       }
     });
   };
@@ -102,27 +104,23 @@ const DashboardPage = () => {
       <div className="flex gap-4 w-full p-4">
         {/* User Stats Card */}
         <div className="bg-white p-8 rounded-xl shadow-lg w-full md:w-1/3 transition-transform transform hover:-translate-y-1 hover:shadow-xl">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Your Stats</h2>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+            Your Stats
+          </h2>
           <p className="text-lg text-gray-700 mb-4">
-            <strong>Current Score:</strong>{" "}
+            <strong>Current Coins:</strong>{" "}
             <span className="text-blue-600">{score}</span>
           </p>
+
           <p className="text-lg text-gray-700 mb-4">
-            <strong>Questions Answered:</strong>{" "}
-            <span className="text-green-600">{questionsAnswered}</span>
-          </p>
-          <p className="text-lg text-gray-700 mb-4">
-            <strong>Highest Score:</strong>{" "}
-            <span className="text-yellow-600">{highestScore}</span>
-          </p>
-          <p className="text-lg text-gray-700 mb-4">
-            <strong>Average Score:</strong>{" "}
-            <span className="text-purple-600">{averageScore}</span>
+            <strong>Correct Answers:</strong>{" "}
+            <span className="text-green-600">{correctAnswers}</span>
           </p>
           <p className="text-lg text-gray-700 mb-6">
-            <strong>Last Game Date:</strong>{" "}
-            <span className="text-gray-600">{lastGameDate ? lastGameDate.toLocaleDateString() : 'N/A'}</span>
+            <strong>Incorrect Answers:</strong>{" "}
+            <span className="text-red-600">{incorrectAnswers}</span>
           </p>
+
           <button
             onClick={resetProgress}
             className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition-transform"
@@ -133,7 +131,9 @@ const DashboardPage = () => {
 
         {/* Leaderboard Card */}
         <div className="bg-white p-8 rounded-xl shadow-lg w-full md:w-2/3 transition-transform transform hover:-translate-y-1 hover:shadow-xl">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Leaderboard</h2>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            Leaderboard
+          </h2>
 
           <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300 text-left">

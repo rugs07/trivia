@@ -9,12 +9,20 @@ const GamePage = () => {
   const [question, setQuestion] = useState(null);
   const [options, setOptions] = useState([]);
   const [coins, setCoins] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0); // New state for correct answers
+  const [incorrectAnswers, setIncorrectAnswers] = useState(0); // New state for incorrect answers
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const cookies = nookies.get();
     const savedCoins = parseInt(cookies.coins || "0", 10);
+    const savedCorrectAnswers = parseInt(cookies.correctAnswers || "0", 10);
+    const savedIncorrectAnswers = parseInt(cookies.incorrectAnswers || "0", 10);
+
     setCoins(savedCoins);
+    setCorrectAnswers(savedCorrectAnswers);
+    setIncorrectAnswers(savedIncorrectAnswers);
+
     fetchRandomQuestion();
   }, []);
 
@@ -55,7 +63,7 @@ const GamePage = () => {
       updatedCoins += 15;
       Swal.fire({
         title: "🎉 Correct Answer!",
-        text: "Awesome! You've earned 10 coins.",
+        text: "Awesome! You've earned 15 coins.",
         icon: "success",
         confirmButtonText: "Next Question",
         customClass: {
@@ -63,6 +71,11 @@ const GamePage = () => {
             "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700",
         },
       }).then(() => {
+        setCorrectAnswers(correctAnswers + 1);
+        nookies.set(null, "correctAnswers", (correctAnswers + 1).toString(), {
+          path: "/",
+        });
+
         fetchRandomQuestion();
         nookies.set(null, "coins", updatedCoins.toString(), { path: "/" });
       });
@@ -78,6 +91,15 @@ const GamePage = () => {
             "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700",
         },
       }).then(() => {
+        // Update incorrect answers count
+        setIncorrectAnswers(incorrectAnswers + 1);
+        nookies.set(
+          null,
+          "incorrectAnswers",
+          (incorrectAnswers + 1).toString(),
+          { path: "/" }
+        );
+
         fetchRandomQuestion();
         nookies.set(null, "coins", updatedCoins.toString(), { path: "/" });
       });
@@ -90,7 +112,7 @@ const GamePage = () => {
     if (coins >= 10) {
       Swal.fire({
         title: "Hint!",
-        text: `The capital of The Country is ${question.capital[0]}.`,
+        text: `The capital of ${question.name.common} is ${question.capital[0]}.`,
         icon: "info",
         confirmButtonText: "Got it!",
       });
@@ -145,7 +167,7 @@ const GamePage = () => {
           </button>
           <p className="mt-6 text-gray-700 text-lg justify-center font-medium text-center flex items-center gap-2">
             Current Coins:{" "}
-            <img src="/images/coin2.png" className="w-6 h-6"></img>
+            <img src="/images/coin2.png" className="w-6 h-6" alt="coin" />
             <span className="text-blue-600 font-bold">{coins}</span>
           </p>
         </div>
