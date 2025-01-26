@@ -44,7 +44,7 @@ const DashboardPage = () => {
 
   useEffect(() => {
     const cookies = nookies.get();
-    const savedScore = parseInt(cookies.score || "0", 10); // Get score from cookies
+    const savedScore = parseInt(cookies.coins || "0", 10); // Get score from cookies
     const answered = parseInt(cookies.questionsAnswered || "0", 10);
 
     setScore(savedScore);
@@ -68,9 +68,8 @@ const DashboardPage = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setScore(0);
-        setQuestionsAnswered(0);
         toast.success("Score Reset Successfully");
-        nookies.set(null, "score", 0, { path: "/" });
+        nookies.set(null, "coins", 0, { path: "/" });
       }
     });
   };
@@ -129,9 +128,7 @@ const DashboardPage = () => {
                   <tr
                     key={row.id}
                     className={
-                      row.original.name === "Alice"
-                        ? "bg-blue-100"
-                        : ""
+                      row.original.name === "Alice" ? "bg-blue-100" : ""
                     }
                   >
                     {row.getVisibleCells().map((cell) => (

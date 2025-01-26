@@ -8,19 +8,19 @@ import Loading from "../components/Loading";
 const GamePage = () => {
   const [question, setQuestion] = useState(null);
   const [options, setOptions] = useState([]);
-  const [score, setScore] = useState(0);
+  const [coins, setCoins] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const cookies = nookies.get();
-    const savedScore = parseInt(cookies.score || "0", 10);
-    setScore(savedScore);
+    const savedCoins = parseInt(cookies.coins || "0", 10);
+    setCoins(savedCoins);
     fetchRandomQuestion();
   }, []);
 
   const fetchRandomQuestion = async () => {
     try {
-      console.log("loading called")
+      console.log("loading called");
       setLoading(true);
       const res = await fetch("https://restcountries.com/v3.1/all");
       const countries = await res.json();
@@ -46,16 +46,16 @@ const GamePage = () => {
     return options.sort(() => Math.random() - 0.5);
   };
 
-  console.log(loading, "loading compoenent")
+  console.log(loading, "loading component");
 
   const handleAnswer = (answer) => {
-    let updatedScore = score; 
+    let updatedCoins = coins;
 
     if (answer === question.name.common) {
-      updatedScore += 10; 
+      updatedCoins += 10;
       Swal.fire({
         title: "🎉 Correct Answer!",
-        text: `Awesome! You've earned 10 points.`,
+        text: "Awesome! You've earned 10 coins.",
         icon: "success",
         confirmButtonText: "Next Question",
         customClass: {
@@ -64,10 +64,10 @@ const GamePage = () => {
         },
       }).then(() => {
         fetchRandomQuestion();
-        nookies.set(null, "score", updatedScore.toString(), { path: "/" });
+        nookies.set(null, "coins", updatedCoins.toString(), { path: "/" });
       });
     } else {
-      updatedScore -= 5;
+      updatedCoins -= 5;
       Swal.fire({
         title: "❌ Wrong Answer!",
         text: `The correct answer was ${question.name.common}. Keep trying!`,
@@ -79,11 +79,31 @@ const GamePage = () => {
         },
       }).then(() => {
         fetchRandomQuestion();
-        nookies.set(null, "score", updatedScore.toString(), { path: "/" });
+        nookies.set(null, "coins", updatedCoins.toString(), { path: "/" });
       });
     }
 
-    setScore(updatedScore);
+    setCoins(updatedCoins);
+  };
+
+  const handleHint = () => {
+    if (coins >= 10) {
+      Swal.fire({
+        title: "Hint!",
+        text: `The capital of The Country is ${question.capital[0]}.`,
+        icon: "info",
+        confirmButtonText: "Got it!",
+      });
+      setCoins(coins - 10);
+      nookies.set(null, "coins", (coins - 10).toString(), { path: "/" });
+    } else {
+      Swal.fire({
+        title: "Not Enough Coins!",
+        text: "You need at least 10 coins to use a hint.",
+        icon: "warning",
+        confirmButtonText: "Okay",
+      });
+    }
   };
 
   if (!question) return <div>Loading...</div>;
@@ -92,8 +112,7 @@ const GamePage = () => {
     <>
       {loading && <Loading />}
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500">
-        {/* <h1 className="text-4xl font-bold text-white mb-8">GeoExplorer Trivia</h1> */}
-        <div className="bg-white shadow-2xl rounded-xl p-6 w-full max-w-md">
+        <div className="bg-white shadow-2xl rounded-xl p-6 w-full max-w-md mt-[70px]">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
             Guess the Country!
           </h2>
@@ -104,7 +123,7 @@ const GamePage = () => {
               className="w-40 h-24 object-cover mx-auto rounded-md shadow"
             />
           </div>
-          <ul className=" grid grid-cols-2 gap-4">
+          <ul className="grid grid-cols-2 gap-4">
             {options.map((option) => (
               <li key={option}>
                 <button
@@ -116,9 +135,16 @@ const GamePage = () => {
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-gray-700 text-lg font-medium text-center">
-            Current Score:{" "}
-            <span className="text-blue-600 font-bold">{score}</span>
+          <button
+            onClick={handleHint}
+            className="mt-4 w-full bg-yellow-500 text-white py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors"
+          >
+            Use Hint (Cost: 10 coins)
+          </button>
+          <p className="mt-6 text-gray-700 text-lg justify-center font-medium text-center flex items-center gap-2">
+            Current Coins:{" "}
+            <div><img src="/images/coin2.png" className="w-6 h-6"></img></div>
+            <span className="text-blue-600 font-bold">{coins}</span>
           </p>
         </div>
       </div>
