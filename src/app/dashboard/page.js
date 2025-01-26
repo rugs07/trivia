@@ -47,27 +47,23 @@ const DashboardPage = () => {
     const cookies = nookies.get();
     const savedScore = parseInt(cookies.coins || "0", 10); // Get score from cookies
     const answered = parseInt(cookies.questionsAnswered || "0", 10);
-    const savedHighestScore = parseInt(cookies.highestScore || "0", 10);
-    const savedLastGameDate = cookies.lastGameDate || null;
+  
 
-    // Retrieve correct and incorrect answers
     const savedCorrectAnswers = parseInt(cookies.correctAnswers || "0", 10);
     const savedIncorrectAnswers = parseInt(cookies.incorrectAnswers || "0", 10);
 
     setScore(savedScore);
 
-    // Set correct and incorrect answers
     setCorrectAnswers(savedCorrectAnswers);
     setIncorrectAnswers(savedIncorrectAnswers);
 
-    // Calculate average score (for demo purposes)
     if (answered > 0) {
       setAverageScore((savedScore / answered).toFixed(2));
     }
   }, []);
 
-  const resetProgress = () => {
-    Swal.fire({
+  const resetProgress = async () => {
+    const result = await Swal.fire({
       title: "Are you sure?",
       text: "This will reset your score and progress.",
       icon: "warning",
@@ -80,21 +76,25 @@ const DashboardPage = () => {
         cancelButton:
           "bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700",
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setScore(0);
-        setCorrectAnswers(0);
-        setIncorrectAnswers(0);
-        toast.success("Progress Reset Successfully");
-        nookies.set(null, "coins", 0, { path: "/" });
-        nookies.set(null, "questionsAnswered", 0, { path: "/" });
-        nookies.set(null, "highestScore", 0, { path: "/" });
-        nookies.set(null, "lastGameDate", null, { path: "/" });
-        nookies.set(null, "correctAnswers", 0, { path: "/" });
-        nookies.set(null, "incorrectAnswers", 0, { path: "/" });
-      }
     });
+
+    if (result.isConfirmed) {
+      console.log("Resetting progress..."); // Debug log
+      setScore(0);
+      setCorrectAnswers(0);
+      setIncorrectAnswers(0);
+
+      toast.success("Progress Reset Successfully");
+
+      nookies.set(null, "coins", 0, { path: "/" });
+      nookies.set(null, "correctAnswers", 0, { path: "/" });
+      nookies.set(null, "incorrectAnswers", 0, { path: "/" });
+
+      navigate('/')
+    }
   };
+
+  
 
   const tableRows = tableInstance.getRowModel().rows;
 
@@ -121,12 +121,12 @@ const DashboardPage = () => {
             <span className="text-red-600">{incorrectAnswers}</span>
           </p>
 
-          <button
+          {/* <button
             onClick={resetProgress}
             className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition-transform"
           >
             Reset Progress
-          </button>
+          </button> */}
         </div>
 
         {/* Leaderboard Card */}

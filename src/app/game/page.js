@@ -9,27 +9,49 @@ const GamePage = () => {
   const [question, setQuestion] = useState(null);
   const [options, setOptions] = useState([]);
   const [coins, setCoins] = useState(0);
-  const [correctAnswers, setCorrectAnswers] = useState(0); // New state for correct answers
-  const [incorrectAnswers, setIncorrectAnswers] = useState(0); // New state for incorrect answers
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [difficulty, setDifficulty] = useState("easy");
+  const [timer, setTimer] = useState(30); // Timer for medium and hard modes
+  const [isFirstQuestion, setIsFirstQuestion] = useState(true); // Track if it's the first question
 
   useEffect(() => {
     const cookies = nookies.get();
     const savedCoins = parseInt(cookies.coins || "0", 10);
     const savedCorrectAnswers = parseInt(cookies.correctAnswers || "0", 10);
     const savedIncorrectAnswers = parseInt(cookies.incorrectAnswers || "0", 10);
+    const savedDifficulty = cookies.difficulty || "easy";
 
     setCoins(savedCoins);
     setCorrectAnswers(savedCorrectAnswers);
     setIncorrectAnswers(savedIncorrectAnswers);
+    setDifficulty(savedDifficulty);
 
     fetchRandomQuestion();
   }, []);
 
+  useEffect(() => {
+    let countdown;
+    if (timer > 0) {
+      countdown = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else if (timer === 0 && !isFirstQuestion) {
+      handleTimeOut();
+    }
+    return () => clearInterval(countdown);
+  }, [timer, isFirstQuestion, difficulty]);
+
   const fetchRandomQuestion = async () => {
     try {
-      console.log("loading called");
       setLoading(true);
+      const initialTimer =
+        difficulty === "easy" ? 0 : difficulty === "medium" ? 30 : 15;
+
+      if (!isFirstQuestion) {
+        setTimer(initialTimer);
+      }
       const res = await fetch("https://restcountries.com/v3.1/all");
       const countries = await res.json();
       const randomCountry =
@@ -37,8 +59,12 @@ const GamePage = () => {
 
       setQuestion(randomCountry);
       setOptions(generateOptions(randomCountry, countries));
+
+      if (isFirstQuestion) {
+        setIsFirstQuestion(false);
+      }
     } catch (error) {
-      console.log(error, "Error Loading Data");
+      console.error("Error loading data", error);
     } finally {
       setLoading(false);
     }
@@ -54,24 +80,20 @@ const GamePage = () => {
     return options.sort(() => Math.random() - 0.5);
   };
 
-  console.log(loading, "loading component");
-
   const handleAnswer = (answer) => {
     let updatedCoins = coins;
 
     if (answer === question.name.common) {
-      updatedCoins += 15;
+      const reward =
+        difficulty === "easy" ? 15 : difficulty === "medium" ? 10 : 5;
+      updatedCoins += reward;
       Swal.fire({
         title: "🎉 Correct Answer!",
-        text: "Awesome! You've earned 15 coins.",
+        text: `Awesome! You've earned ${reward} coins.`,
         icon: "success",
         confirmButtonText: "Next Question",
-        customClass: {
-          confirmButton:
-            "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700",
-        },
       }).then(() => {
-        setCorrectAnswers(correctAnswers + 1);
+        setCorrectAnswers((prev) => prev + 1);
         nookies.set(null, "correctAnswers", (correctAnswers + 1).toString(), {
           path: "/",
         });
@@ -80,19 +102,16 @@ const GamePage = () => {
         nookies.set(null, "coins", updatedCoins.toString(), { path: "/" });
       });
     } else {
-      updatedCoins -= 5;
+      const penalty =
+        difficulty === "easy" ? 5 : difficulty === "medium" ? 10 : 15;
+      updatedCoins -= penalty;
       Swal.fire({
         title: "❌ Wrong Answer!",
-        text: `The correct answer was ${question.name.common}. Keep trying!`,
+        text: `The correct answer was ${question.name.common}. You lost ${penalty} coins.`,
         icon: "error",
         confirmButtonText: "Try Again",
-        customClass: {
-          confirmButton:
-            "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700",
-        },
       }).then(() => {
-        // Update incorrect answers count
-        setIncorrectAnswers(incorrectAnswers + 1);
+        setIncorrectAnswers((prev) => prev + 1);
         nookies.set(
           null,
           "incorrectAnswers",
@@ -108,6 +127,30 @@ const GamePage = () => {
     setCoins(updatedCoins);
   };
 
+  const handleTimeOut = () => {
+    const penalty = difficulty === "medium" ? 10 : difficulty === "hard" ? 15 : 0;
+    if (difficulty !== "easy") {
+      Swal.fire({
+        title: "⏰ Time's Up!",
+        text: `You ran out of time and lost ${penalty} coins.`,
+        icon: "error",
+        confirmButtonText: "Next Question",
+      }).then(() => {
+        setIncorrectAnswers((prev) => prev + 1);
+        nookies.set(
+          null,
+          "incorrectAnswers",
+          (incorrectAnswers + 1).toString(),
+          { path: "/" }
+        );
+
+        setCoins((prev) => prev - penalty);
+        nookies.set(null, "coins", (coins - penalty).toString(), { path: "/" });
+        fetchRandomQuestion();
+      });
+    }
+  };
+
   const handleHint = () => {
     if (coins >= 10) {
       Swal.fire({
@@ -116,7 +159,7 @@ const GamePage = () => {
         icon: "info",
         confirmButtonText: "Got it!",
       });
-      setCoins(coins - 10);
+      setCoins((prev) => prev - 10);
       nookies.set(null, "coins", (coins - 10).toString(), { path: "/" });
     } else {
       Swal.fire({
@@ -135,9 +178,16 @@ const GamePage = () => {
       {loading && <Loading />}
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500">
         <div className="bg-white shadow-2xl rounded-xl p-6 w-full max-w-md mt-[70px]">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+          <h2 className="text-2xl font-semibold text-gray-800 text-center">
             Guess the Country!
           </h2>
+          {difficulty !== "easy" && (
+            <p className="text-center text-red-600 font-bold mb-2">
+              {isFirstQuestion
+                ? "This question has no timer."
+                : `Time Left: ${timer}s`}
+            </p>
+          )}
           <div className="mb-6">
             <img
               src={question.flags.svg}
@@ -151,7 +201,7 @@ const GamePage = () => {
                 <button
                   onClick={() => handleAnswer(option)}
                   className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 px-4 rounded-lg hover:scale-105 transition-transform overflow-hidden text-ellipsis whitespace-nowrap"
-                  style={{ maxHeight: "60px" }} // Adjust height as needed
+                  style={{ maxHeight: "60px" }}
                 >
                   {option}
                 </button>
@@ -165,10 +215,10 @@ const GamePage = () => {
           >
             Use Hint (Cost: 10 coins)
           </button>
-          <p className="mt-6 text-gray-700 text-lg justify-center font-medium text-center flex items-center gap-2">
-            Current Coins:{" "}
-            <img src="/images/coin2.png" className="w-6 h-6" alt="coin" />
-            <span className="text-blue-600 font-bold">{coins}</span>
+          <p className="mt-6 text-gray-700 text-lg text-center items-center flex justify-center">
+            Coins: 
+            <img src="/images/coin2.png" className="w-7 h-7 mx-2"></img>
+            {coins} 
           </p>
         </div>
       </div>
