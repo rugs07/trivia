@@ -128,13 +128,15 @@ const GamePage = () => {
               <li key={option}>
                 <button
                   onClick={() => handleAnswer(option)}
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 px-4 rounded-lg hover:scale-105 transition-transform"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 px-4 rounded-lg hover:scale-105 transition-transform overflow-hidden text-ellipsis whitespace-nowrap"
+                  style={{ maxHeight: "60px" }} // Adjust height as needed
                 >
                   {option}
                 </button>
               </li>
             ))}
           </ul>
+
           <button
             onClick={handleHint}
             className="mt-4 w-full bg-yellow-500 text-white py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors"
