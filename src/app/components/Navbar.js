@@ -1,14 +1,19 @@
-"use client"
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const Navbar = () => {
   const pathname = usePathname();
 
+  if (pathname === '/') {
+    return null;
+  }
+
   const links = [
-    { name: "Home", href: "/" },
-    { name: "Play Trivia", href: "/game" },
-    { name: "Dashboard", href: "/dashboard" },
+    { name: 'Home', href: '/' },
+    { name: 'Play Trivia', href: '/game' },
+    { name: 'Dashboard', href: '/dashboard' },
   ];
 
   return (
@@ -22,8 +27,8 @@ const Navbar = () => {
                 href={link.href}
                 className={`text-lg font-medium ${
                   pathname === link.href
-                    ? "text-white underline"
-                    : "text-gray-200 hover:text-white"
+                    ? 'text-white underline'
+                    : 'text-gray-200 hover:text-white'
                 }`}
               >
                 {link.name}

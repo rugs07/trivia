@@ -52,7 +52,7 @@ const GamePage = () => {
     let updatedCoins = coins;
 
     if (answer === question.name.common) {
-      updatedCoins += 10;
+      updatedCoins += 15;
       Swal.fire({
         title: "🎉 Correct Answer!",
         text: "Awesome! You've earned 10 coins.",
@@ -143,7 +143,7 @@ const GamePage = () => {
           </button>
           <p className="mt-6 text-gray-700 text-lg justify-center font-medium text-center flex items-center gap-2">
             Current Coins:{" "}
-            <div><img src="/images/coin2.png" className="w-6 h-6"></img></div>
+            <img src="/images/coin2.png" className="w-6 h-6"></img>
             <span className="text-blue-600 font-bold">{coins}</span>
           </p>
         </div>
