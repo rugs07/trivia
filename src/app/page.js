@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <main className="main-container flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-400 to-blue-500 text-white p-4 md:p-8">
-      <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">
+      <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center mt-10">
         Welcome to GeoExplorer Trivia
       </h1>
 

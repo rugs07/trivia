@@ -8,20 +8,20 @@ const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  if (pathname === "/") {
-    return null;
-  }
+  // if (pathname === "/") {
+  //   return null;
+  // }
 
   const links = [
-    { name: "Home", href: "/" },
+    // { name: "Home", href: "/" },
     { name: "Play Trivia", href: "/game" },
     { name: "Dashboard", href: "/dashboard" },
   ];
 
   return (
-    <nav className="bg-gradient-to-r from-[#000000] to-[#555555] py-4 shadow-md px-4 fixed w-full z-10">
+    <nav className="bg-gradient-to-r from-[#000000] to-[#555555] py-4 z-10 shadow-md px-4 fixed w-full">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.href ="/"}>
           <img src="/images/geo.png" className="w-10 h-6"></img>
         <h1 className="text-white text-2xl font-bold">GeoExplorer Trivia</h1>
         </div>
