@@ -13,8 +13,8 @@ const GamePage = () => {
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [loading, setLoading] = useState(true);
   const [difficulty, setDifficulty] = useState("easy");
-  const [timer, setTimer] = useState(30); // Timer for medium and hard modes
-  const [isFirstQuestion, setIsFirstQuestion] = useState(true); // Track if it's the first question
+  const [timer, setTimer] = useState(30); 
+  const [isFirstQuestion, setIsFirstQuestion] = useState(true);
 
   useEffect(() => {
     const cookies = nookies.get();

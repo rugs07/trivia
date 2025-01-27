@@ -8,10 +8,6 @@ const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  // if (pathname === "/") {
-  //   return null;
-  // }
-
   const links = [
     // { name: "Home", href: "/" },
     { name: "Play Trivia", href: "/game" },
@@ -72,9 +68,9 @@ const Navbar = () => {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className={`text-lg font-medium ${
+                className={`text-lg border rounded-lg border-[#7b7b7b] p-2 ${
                   pathname === link.href
-                    ? "text-white underline"
+                    ? "text-[#8b8b8b] font-bold"
                     : "text-gray-200 hover:text-white"
                 }`}
               >
@@ -85,7 +81,6 @@ const Navbar = () => {
         </ul>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-gradient-to-r from-[#000000] to-[#555555] py-4">
           <ul className="flex flex-col items-center space-y-4">
@@ -98,7 +93,7 @@ const Navbar = () => {
                       ? "text-white underline"
                       : "text-gray-200 hover:text-white"
                   }`}
-                  onClick={() => setIsOpen(false)} // Close menu on link click
+                  onClick={() => setIsOpen(false)} 
                 >
                   {link.name}
                 </Link>

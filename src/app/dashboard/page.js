@@ -44,12 +44,12 @@ const InstanceStats = ({ correctAnswers, incorrectAnswers }) => {
             {
               value: correctAnswers,
               name: "Correct",
-              itemStyle: { color: "#FBDB86" }, // Green
+              itemStyle: { color: "#FBDB86" },
             },
             {
               value: incorrectAnswers,
               name: "Incorrect",
-              itemStyle: { color: "#000" }, // Red
+              itemStyle: { color: "#000" },
             },
           ],
         },
@@ -130,7 +130,7 @@ const DashboardPage = () => {
 
   useEffect(() => {
     const cookies = nookies.get();
-    const savedScore = parseInt(cookies.coins || "0", 10); // Get score from cookies
+    const savedScore = parseInt(cookies.coins || "0", 10);
     const answered = parseInt(cookies.questionsAnswered || "0", 10);
 
     const savedCorrectAnswers = parseInt(cookies.correctAnswers || "0", 10);
@@ -163,7 +163,7 @@ const DashboardPage = () => {
     });
 
     if (result.isConfirmed) {
-      console.log("Resetting progress..."); // Debug log
+      console.log("Resetting progress...");
       setScore(0);
       setCorrectAnswers(0);
       setIncorrectAnswers(0);
