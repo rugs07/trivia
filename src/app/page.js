@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import nookies from "nookies";
 import "./globals.css";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const [lastScore, setLastScore] = useState(null);
@@ -13,7 +14,10 @@ export default function Home() {
 
   const handleStartGame = (difficulty) => {
     nookies.set(null, "difficulty", difficulty, { path: "/" });
-    window.location.href = "/game";
+    toast.success(`Game Difficulty set to ${difficulty}`);
+    setTimeout(() => {
+      window.location.href = "/game";
+    }, 1500);
   };
 
   return (
@@ -25,7 +29,8 @@ export default function Home() {
       {lastScore ? (
         <p className="mb-4 text-lg md:text-xl">
           Welcome back! Your last score was{" "}
-          <span className="font-bold underline">{lastScore}</span>. Can you beat it?
+          <span className="font-bold underline">{lastScore}</span>. Can you beat
+          it?
         </p>
       ) : (
         <p className="mb-4 text-lg md:text-xl">
@@ -60,8 +65,8 @@ export default function Home() {
           </button>
         </div>
 
-        <p className="text-center text-gray-500">
-          Your score will be saved, and you can pick up where you left off!
+        <p className="text-center text-gray-500 font-bold">
+        Answer Fast, Earn Big: Your Speed Unlocks the Treasure!
         </p>
       </div>
 
