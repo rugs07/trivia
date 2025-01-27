@@ -224,7 +224,7 @@ const GamePage = () => {
                 {coins}
               </p>
             </div>
-            <div className="bg-black p-2 rounded text-white px-4 cursor-pointer" onClick={() => window.location.href = "/"}>Stop Game</div>
+            <div className="bg-black p-2 rounded-lg text-white px-4 cursor-pointer hover:bg-[#242424] transition-colors" onClick={() => window.location.href = "/"}>Stop Game</div>
           </div>
         </div>
       </div>
