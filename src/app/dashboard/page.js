@@ -80,15 +80,11 @@ const InstanceStats = ({ correctAnswers, incorrectAnswers }) => {
       <div className="ml-4 flex flex-col gap-2 text-left">
         <p className="text-lg text-gray-700">
           <strong>Correct Ans:</strong>{" "}
-          <span className="text-[#000] font-bold">
-            {correctAnswers}
-          </span>
+          <span className="text-[#000] font-bold">{correctAnswers}</span>
         </p>
         <p className="text-lg text-gray-700">
           <strong>Incorrect Ans:</strong>{" "}
-          <span className="text-[#000] font-bold ">
-            {incorrectAnswers}
-          </span>
+          <span className="text-[#000] font-bold ">{incorrectAnswers}</span>
         </p>
       </div>
     </div>
@@ -206,12 +202,16 @@ const DashboardPage = () => {
           <p className="text-[18px] text-gray-700">
             <strong>Percentage:</strong>{" "}
             <span className="text-[#000] font-bold">
-              {(
-                (Number(correctAnswers) /
-                  (Number(correctAnswers) + Number(incorrectAnswers))) *
-                100
-              ).toFixed(2)}
-              % <span className="text-[14px] text-[#6c6c6c]">Correct</span>
+              {correctAnswers === 0 && incorrectAnswers === 0 ? (
+                <span className="text-[#000]">0% </span>
+              ) : (
+                (
+                  (Number(correctAnswers) /
+                    (Number(correctAnswers) + Number(incorrectAnswers))) *
+                  100
+                ).toFixed(2) + "%"
+              )}
+              <span className="text-[14px] text-[#6c6c6c]">Correct</span>
             </span>
           </p>
 
