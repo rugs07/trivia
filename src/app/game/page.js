@@ -71,7 +71,7 @@ const GamePage = () => {
 
   const fetchRandomQuestion = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const initialTimer =
         difficulty === "easy" ? 0 : difficulty === "medium" ? 30 : 15;
   
