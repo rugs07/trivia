@@ -178,7 +178,7 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-500 flex flex-col items-center justify-center pt-10">
-      <h1 className="text-4xl font-bold text-white mt-6 mb-3">Dashboard</h1>
+      <h1 className="text-4xl font-bold text-white mt-8 mb-1">Dashboard</h1>
       <div className="flex gap-4 w-full p-4">
         {/* User Stats Card */}
         <div className="bg-white p-8 rounded-xl shadow-lg w-full md:w-1/3 transition-transform transform hover:-translate-y-1 hover:shadow-xl">
