@@ -49,9 +49,10 @@ export default function Home() {
   }
 
   return (
+    <div className="overflow-hidden">
     <main className="main-container flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-400 to-blue-500 text-white p-4 md:p-8">
       <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center mt-10">
-        Welcome to GeoExplorer Trivia
+        Welcome to <span className="text-black">GeoExplorer</span> <span className="text-[#12354f]">Trivia</span>
       </h1>
 
       {lastScore ? (
@@ -102,5 +103,6 @@ export default function Home() {
         © 2025 GeoExplorer Trivia. All rights reserved.
       </footer>
     </main>
+    </div>
   );
 }

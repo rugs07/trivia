@@ -241,6 +241,7 @@ const GamePage = () => {
   return (
     <>
       {loading && <Loading />}
+      <div className="overflow-hidden">
       <div className="game-contain flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500">
         <div className="bg-white shadow-2xl rounded-xl p-6 w-full max-w-md mt-[70px]">
           <h2 className="text-2xl font-semibold text-gray-800 text-center mb-2">
@@ -291,6 +292,7 @@ const GamePage = () => {
             <div className="bg-black p-2 rounded-lg text-white px-4 cursor-pointer hover:bg-[#242424] transition-colors" onClick={() => window.location.href = "/"}>Stop Game</div>
           </div>
         </div>
+      </div>
       </div>
     </>
   );
