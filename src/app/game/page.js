@@ -81,11 +81,26 @@ const GamePage = () => {
   };
 
   const handleAnswer = (answer) => {
+    const initialTime = difficulty === "medium" ? 30 : difficulty === "hard" ? 15 : 0;
+    const timeTaken = initialTime - timer; 
+  
     let updatedCoins = coins;
-
+  
     if (answer === question.name.common) {
-      const reward =
-        difficulty === "easy" ? 10 : difficulty === "medium" ? 15 : 20;
+      let reward = 0;
+  
+      if (difficulty === "medium") {
+        if (timeTaken <= 10) reward = 15;
+        else if (timeTaken <= 20) reward = 10;
+        else reward = 5;
+      } else if (difficulty === "hard") {
+        if (timeTaken <= 5) reward = 20;
+        else if (timeTaken <= 10) reward = 15;
+        else reward = 10;
+      } else {
+        reward = 10;
+      }
+  
       updatedCoins += reward;
       Swal.fire({
         title: "🎉 Correct Answer!",
@@ -97,13 +112,21 @@ const GamePage = () => {
         nookies.set(null, "correctAnswers", (correctAnswers + 1).toString(), {
           path: "/",
         });
-
+  
         fetchRandomQuestion();
         nookies.set(null, "coins", updatedCoins.toString(), { path: "/" });
+        resetTimer();
       });
     } else {
       const penalty =
-        difficulty === "easy" ? 5 : difficulty === "medium" ? 10 : 15;
+        difficulty === "easy"
+          ? 5
+          : difficulty === "medium"
+          ? 10
+          : difficulty === "hard"
+          ? 15
+          : 0;
+  
       updatedCoins -= penalty;
       Swal.fire({
         title: "❌ Wrong Answer!",
@@ -118,13 +141,18 @@ const GamePage = () => {
           (incorrectAnswers + 1).toString(),
           { path: "/" }
         );
-
+  
         fetchRandomQuestion();
         nookies.set(null, "coins", updatedCoins.toString(), { path: "/" });
+        resetTimer();
       });
     }
-
+  
     setCoins(updatedCoins);
+  };
+  
+  const resetTimer = () => {
+    setTimer(difficulty === "medium" ? 30 : difficulty === "hard" ? 15 : 0);
   };
 
   const handleTimeOut = () => {
