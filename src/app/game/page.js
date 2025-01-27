@@ -85,7 +85,7 @@ const GamePage = () => {
 
     if (answer === question.name.common) {
       const reward =
-        difficulty === "easy" ? 15 : difficulty === "medium" ? 10 : 5;
+        difficulty === "easy" ? 10 : difficulty === "medium" ? 15 : 20;
       updatedCoins += reward;
       Swal.fire({
         title: "🎉 Correct Answer!",
@@ -153,24 +153,30 @@ const GamePage = () => {
   };
 
   const handleHint = () => {
-    if (coins >= 10) {
+    const cost = difficulty === "easy" ? 5 : difficulty === "medium" ? 10 : 15;
+  
+    if (coins >= cost) {
       Swal.fire({
-        title: "Hint!",
+        title: "💡 Hint!",
         text: `The capital of ${question.name.common} is ${question.capital[0]}.`,
         icon: "info",
         confirmButtonText: "Got it!",
+      }).then(() => {
+        const updatedCoins = coins - cost;
+        setCoins(updatedCoins);
+        nookies.set(null, "coins", updatedCoins.toString(), { path: "/" });
       });
-      setCoins((prev) => prev - 10);
-      nookies.set(null, "coins", (coins - 10).toString(), { path: "/" });
     } else {
       Swal.fire({
-        title: "Not Enough Coins!",
-        text: "You need at least 10 coins to use a hint.",
+        title: "❌ Not Enough Coins!",
+        text: `You need at least ${cost} coins to use a hint. Try answering questions to earn more!`,
         icon: "warning",
         confirmButtonText: "Okay",
       });
     }
   };
+  
+  const hintCost = difficulty === "easy" ? 5 : difficulty === "medium" ? 10 : 15
 
   if (!question) return <div>Loading...</div>;
 
@@ -214,7 +220,7 @@ const GamePage = () => {
             onClick={handleHint}
             className="mt-4 w-full bg-yellow-500 text-white py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors"
           >
-            Use Hint (Cost: 10 coins)
+             Use Hint (Cost: {hintCost} coins)
           </button>
           <div className="mt-6 flex justify-between items-center">
             <div>

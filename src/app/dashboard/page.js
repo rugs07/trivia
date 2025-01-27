@@ -80,11 +80,15 @@ const InstanceStats = ({ correctAnswers, incorrectAnswers }) => {
       <div className="ml-4 flex flex-col gap-2 text-left">
         <p className="text-lg text-gray-700">
           <strong>Correct Ans:</strong>{" "}
-          <span className="text-[#FBDB86] underline font-bold">{correctAnswers}</span>
+          <span className="text-[#000] underline font-bold">
+            {correctAnswers}
+          </span>
         </p>
         <p className="text-lg text-gray-700">
           <strong>Incorrect Ans:</strong>{" "}
-          <span className="text-[#000] font-bold underline">{incorrectAnswers}</span>
+          <span className="text-[#000] font-bold underline">
+            {incorrectAnswers}
+          </span>
         </p>
       </div>
     </div>
@@ -182,9 +186,19 @@ const DashboardPage = () => {
       <div className="flex gap-4 w-full p-4">
         {/* User Stats Card */}
         <div className="bg-white p-8 rounded-xl shadow-lg w-full md:w-1/3 transition-transform transform hover:-translate-y-1 hover:shadow-xl">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            Your Stats
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+            Your Stats -
           </h2>
+          <p className="text-lg text-gray-700 font-semibold">
+            Performance -{" "}
+            <span className="font-bold italic">
+              {score < 0
+                ? "You need to improve!"
+                : score <= 50
+                ? "You're doing average!"
+                : "Great job! Keep it up!"}
+            </span>
+          </p>
           <p className="text-lg text-gray-700">
             <strong>Current Coins:</strong>{" "}
             <span className="text-blue-600 font-bold">{score}</span>
@@ -195,7 +209,7 @@ const DashboardPage = () => {
             incorrectAnswers={incorrectAnswers}
           />
           <button
-            className="bg-white p-2 w-full text-black border border-[#1a1a1a] font-bold italic rounded"
+            className="bg-[#F2EDFF] mt-2 p-2 w-full text-black border border-[#1a1a1a] font-bold italic rounded"
             onClick={() => (window.location.href = "/")}
           >
             Change Difficulty
