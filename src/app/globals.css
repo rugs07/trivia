@@ -20,24 +20,24 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Fullscreen loading container */
 .loading-container {
   display: flex;
+  flex-direction: column;
   gap: 10px;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full height of the viewport */
-  width: 100vw; /* Full width of the viewport */
+  height: 100vh; 
+  width: 100vw;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999; /* Make sure it's on top of other content */
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0.5
-  ); /* Optional: Add a dark background overlay */
+  z-index: 9999; 
+  background-color: rgba(0, 0, 0, 0.9); 
+}
+
+.loading-squares {
+  display: flex; 
+  gap: 10px; 
 }
 
 .square {
@@ -67,6 +67,12 @@ body {
   animation-delay: 1.2s;
 }
 
+.loading-text {
+  color: white;
+  font-size: 1.5rem;
+}
+
+
 @keyframes colorChange {
   0%,
   100% {
@@ -81,13 +87,23 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  animation: slide 90s infinite;
+  /* animation: slide 90s infinite; */
   background-size: cover;
   background-position: center;
-  transition: 5s ease-in-out;
+  /* transition: 5s ease-in-out; */
+  background-image: url("/images/1.jpg");
 }
 
-@keyframes slide {
+.game-contain {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-image: url("/images/4.jpg");
+}
+
+/* @keyframes slide {
   0% {
     background-image: url("/images/1.jpg");
   }
@@ -106,4 +122,4 @@ body {
   100% {
     background-image: url("/images/1.jpg");
   }
-}
+} */

@@ -100,9 +100,9 @@ const DashboardPage = () => {
   const dummyLeaderboard = [
     { name: "Rohan", score: 450, rank: 1 },
     { name: "Sreenivas", score: 400, rank: 2 },
-    { name: "Sarthak", score: 350, rank: 3 },
+    { name: "kamal", score: 350, rank: 3 },
     { name: "John", score: 300, rank: 4 },
-    { name: "Kiara", score: 280, rank: 5 },
+    { name: "Shivam", score: 280, rank: 5 },
     { name: "You", score, rank: 6 },
   ];
 
@@ -142,37 +142,37 @@ const DashboardPage = () => {
     }
   }, []);
 
-  const resetProgress = async () => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This will reset your score and progress.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, reset it!",
-      cancelButtonText: "No, keep it",
-      customClass: {
-        confirmButton:
-          "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700",
-        cancelButton:
-          "bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700",
-      },
-    });
+  // const resetProgress = async () => {
+  //   const result = await Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "This will reset your score and progress.",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Yes, reset it!",
+  //     cancelButtonText: "No, keep it",
+  //     customClass: {
+  //       confirmButton:
+  //         "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700",
+  //       cancelButton:
+  //         "bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700",
+  //     },
+  //   });
 
-    if (result.isConfirmed) {
-      console.log("Resetting progress...");
-      setScore(0);
-      setCorrectAnswers(0);
-      setIncorrectAnswers(0);
+  //   if (result.isConfirmed) {
+  //     console.log("Resetting progress...");
+  //     setScore(0);
+  //     setCorrectAnswers(0);
+  //     setIncorrectAnswers(0);
 
-      toast.success("Progress Reset Successfully");
+  //     toast.success("Progress Reset Successfully");
 
-      nookies.set(null, "coins", 0, { path: "/" });
-      nookies.set(null, "correctAnswers", 0, { path: "/" });
-      nookies.set(null, "incorrectAnswers", 0, { path: "/" });
+  //     nookies.set(null, "coins", 0, { path: "/" });
+  //     nookies.set(null, "correctAnswers", 0, { path: "/" });
+  //     nookies.set(null, "incorrectAnswers", 0, { path: "/" });
 
-      navigate("/");
-    }
-  };
+  //     navigate("/");
+  //   }
+  // };
 
   const tableRows = tableInstance.getRowModel().rows;
 
@@ -180,14 +180,13 @@ const DashboardPage = () => {
     <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-500 flex flex-col items-center justify-center pt-10">
       <h1 className="text-4xl font-bold text-white mt-8 mb-1">Dashboard</h1>
       <div className="flex gap-4 w-full p-4">
-        {/* User Stats Card */}
         <div className="bg-white p-8 rounded-xl shadow-lg w-full md:w-1/3 transition-transform transform hover:-translate-y-1 hover:shadow-xl">
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">
             Your Stats -
           </h2>
           <p className="text-lg text-gray-700 font-semibold">
             Performance -{" "}
-            <span className="font-bold italic underline">
+            <span className="font-bold italic">
               {score < 0
                 ? "You need to improve!"
                 : score <= 50
@@ -211,7 +210,7 @@ const DashboardPage = () => {
                   100
                 ).toFixed(2) + "%"
               )}
-              <span className="text-[14px] text-[#6c6c6c]">Correct</span>
+              <span className="text-[15px] text-[#6c6c6c]"> Correct</span>
             </span>
           </p>
 
@@ -268,7 +267,7 @@ const DashboardPage = () => {
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className="py-2 px-4 border-b border-gray-300"
+                        className="py-2 px-4 border-b border-gray-300 text-[#535353] font-semibold"
                       >
                         {cell.getValue()}
                       </td>

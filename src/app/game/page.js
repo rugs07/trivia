@@ -47,6 +47,28 @@ const GamePage = () => {
     resetTimer();
   }, [difficulty]);
 
+  const imagesToLoad = [
+    "/images/4.jpg",
+  ];
+
+  const preloadImages = (imageArray) => {
+    return Promise.all(
+      imageArray.map((src) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+        });
+      })
+    );
+  };
+
+  useEffect(() => {
+    preloadImages(imagesToLoad).then(() => {
+      setLoading(false);
+    });
+  }, []);
+
   const fetchRandomQuestion = async () => {
     try {
       setLoading(true);
@@ -184,6 +206,10 @@ const GamePage = () => {
     }
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   const handleHint = () => {
     const cost = difficulty === "easy" ? 5 : difficulty === "medium" ? 10 : 15;
   
@@ -215,7 +241,7 @@ const GamePage = () => {
   return (
     <>
       {loading && <Loading />}
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500">
+      <div className="game-contain flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500">
         <div className="bg-white shadow-2xl rounded-xl p-6 w-full max-w-md mt-[70px]">
           <h2 className="text-2xl font-semibold text-gray-800 text-center mb-2">
             Guess the Country!

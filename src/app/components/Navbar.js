@@ -9,7 +9,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const links = [
-    // { name: "Home", href: "/" },
     { name: "Play Trivia", href: "/game" },
     { name: "Dashboard", href: "/dashboard" },
   ];

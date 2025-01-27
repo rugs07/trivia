@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import nookies from "nookies";
 import "./globals.css";
 import toast from "react-hot-toast";
+import Loading from "./components/Loading";
 
 export default function Home() {
   const [lastScore, setLastScore] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const cookies = nookies.get();
@@ -19,6 +21,32 @@ export default function Home() {
       window.location.href = "/game";
     }, 1500);
   };
+
+  const imagesToLoad = [
+    "/images/1.jpg",
+  ];
+
+  const preloadImages = (imageArray) => {
+    return Promise.all(
+      imageArray.map((src) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+        });
+      })
+    );
+  };
+
+  useEffect(() => {
+    preloadImages(imagesToLoad).then(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <main className="main-container flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-400 to-blue-500 text-white p-4 md:p-8">
