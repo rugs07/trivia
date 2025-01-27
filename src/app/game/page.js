@@ -128,7 +128,8 @@ const GamePage = () => {
   };
 
   const handleTimeOut = () => {
-    const penalty = difficulty === "medium" ? 10 : difficulty === "hard" ? 15 : 0;
+    const penalty =
+      difficulty === "medium" ? 10 : difficulty === "hard" ? 15 : 0;
     if (difficulty !== "easy") {
       Swal.fire({
         title: "⏰ Time's Up!",
@@ -215,11 +216,16 @@ const GamePage = () => {
           >
             Use Hint (Cost: 10 coins)
           </button>
-          <p className="mt-6 text-gray-700 text-lg text-center items-center flex justify-center">
-            Coins: 
-            <img src="/images/coin2.png" className="w-7 h-7 mx-2"></img>
-            {coins} 
-          </p>
+          <div className="mt-6 flex justify-between items-center">
+            <div>
+              <p className=" text-gray-700 text-lg text-center items-center flex justify-center">
+                Coins:
+                <img src="/images/coin2.png" className="w-7 h-7 mx-2"></img>
+                {coins}
+              </p>
+            </div>
+            <div className="bg-black p-2 rounded text-white px-4 cursor-pointer" onClick={() => window.location.href = "/"}>Stop Game</div>
+          </div>
         </div>
       </div>
     </>

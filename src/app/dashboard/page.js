@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import nookies from "nookies";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
@@ -9,6 +9,87 @@ import {
   getCoreRowModel,
   getSortedRowModel,
 } from "@tanstack/react-table";
+import * as echarts from "echarts";
+
+const InstanceStats = ({ correctAnswers, incorrectAnswers }) => {
+  const chartRef = useRef(null);
+
+  useEffect(() => {
+    const chartInstance = echarts.init(chartRef.current);
+    const option = {
+      tooltip: {
+        trigger: "item",
+      },
+
+      series: [
+        {
+          name: "Answers",
+          type: "pie",
+          radius: ["62%", "95%"],
+
+          avoidLabelOverlap: false,
+          label: {
+            show: false,
+          },
+          emphasis: {
+            label: {
+              fontSize: 18,
+              fontWeight: "bold",
+            },
+          },
+          labelLine: {
+            show: false,
+          },
+          data: [
+            {
+              value: correctAnswers,
+              name: "Correct",
+              itemStyle: { color: "#FBDB86" }, // Green
+            },
+            {
+              value: incorrectAnswers,
+              name: "Incorrect",
+              itemStyle: { color: "#000" }, // Red
+            },
+          ],
+        },
+      ],
+    };
+
+    chartInstance.setOption(option);
+
+    const resizeChart = () => {
+      chartInstance.resize();
+    };
+    window.addEventListener("resize", resizeChart);
+
+    return () => {
+      window.removeEventListener("resize", resizeChart);
+      chartInstance.dispose();
+    };
+  }, [correctAnswers, incorrectAnswers]);
+
+  return (
+    <div className="flex items-center justify-between w-full">
+      <div
+        ref={chartRef}
+        style={{ width: "50%", height: "200px" }}
+        className="relative"
+      ></div>
+
+      <div className="ml-4 flex flex-col gap-2 text-left">
+        <p className="text-lg text-gray-700">
+          <strong>Correct Ans:</strong>{" "}
+          <span className="text-[#FBDB86] underline font-bold">{correctAnswers}</span>
+        </p>
+        <p className="text-lg text-gray-700">
+          <strong>Incorrect Ans:</strong>{" "}
+          <span className="text-[#000] font-bold underline">{incorrectAnswers}</span>
+        </p>
+      </div>
+    </div>
+  );
+};
 
 const DashboardPage = () => {
   const [score, setScore] = useState(0);
@@ -47,7 +128,6 @@ const DashboardPage = () => {
     const cookies = nookies.get();
     const savedScore = parseInt(cookies.coins || "0", 10); // Get score from cookies
     const answered = parseInt(cookies.questionsAnswered || "0", 10);
-  
 
     const savedCorrectAnswers = parseInt(cookies.correctAnswers || "0", 10);
     const savedIncorrectAnswers = parseInt(cookies.incorrectAnswers || "0", 10);
@@ -90,37 +170,36 @@ const DashboardPage = () => {
       nookies.set(null, "correctAnswers", 0, { path: "/" });
       nookies.set(null, "incorrectAnswers", 0, { path: "/" });
 
-      navigate('/')
+      navigate("/");
     }
   };
-
-  
 
   const tableRows = tableInstance.getRowModel().rows;
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-500 flex flex-col items-center justify-center pt-10">
-      <h1 className="text-4xl font-bold text-white mt-3 mb-3">Dashboard</h1>
+      <h1 className="text-4xl font-bold text-white mt-6 mb-3">Dashboard</h1>
       <div className="flex gap-4 w-full p-4">
         {/* User Stats Card */}
         <div className="bg-white p-8 rounded-xl shadow-lg w-full md:w-1/3 transition-transform transform hover:-translate-y-1 hover:shadow-xl">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">
             Your Stats
           </h2>
-          <p className="text-lg text-gray-700 mb-4">
+          <p className="text-lg text-gray-700">
             <strong>Current Coins:</strong>{" "}
-            <span className="text-blue-600">{score}</span>
+            <span className="text-blue-600 font-bold">{score}</span>
           </p>
 
-          <p className="text-lg text-gray-700 mb-4">
-            <strong>Correct Answers:</strong>{" "}
-            <span className="text-green-600">{correctAnswers}</span>
-          </p>
-          <p className="text-lg text-gray-700 mb-6">
-            <strong>Incorrect Answers:</strong>{" "}
-            <span className="text-red-600">{incorrectAnswers}</span>
-          </p>
-
+          <InstanceStats
+            correctAnswers={correctAnswers}
+            incorrectAnswers={incorrectAnswers}
+          />
+          <button
+            className="bg-white p-2 w-full text-black border border-[#1a1a1a] font-bold italic rounded"
+            onClick={() => (window.location.href = "/")}
+          >
+            Change Difficulty
+          </button>
           {/* <button
             onClick={resetProgress}
             className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition-transform"
