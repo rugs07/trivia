@@ -80,13 +80,13 @@ const InstanceStats = ({ correctAnswers, incorrectAnswers }) => {
       <div className="ml-4 flex flex-col gap-2 text-left">
         <p className="text-lg text-gray-700">
           <strong>Correct Ans:</strong>{" "}
-          <span className="text-[#000] underline font-bold">
+          <span className="text-[#000] font-bold">
             {correctAnswers}
           </span>
         </p>
         <p className="text-lg text-gray-700">
           <strong>Incorrect Ans:</strong>{" "}
-          <span className="text-[#000] font-bold underline">
+          <span className="text-[#000] font-bold ">
             {incorrectAnswers}
           </span>
         </p>
@@ -191,7 +191,7 @@ const DashboardPage = () => {
           </h2>
           <p className="text-lg text-gray-700 font-semibold">
             Performance -{" "}
-            <span className="font-bold italic">
+            <span className="font-bold italic underline">
               {score < 0
                 ? "You need to improve!"
                 : score <= 50
@@ -201,7 +201,18 @@ const DashboardPage = () => {
           </p>
           <p className="text-lg text-gray-700">
             <strong>Current Coins:</strong>{" "}
-            <span className="text-blue-600 font-bold">{score}</span>
+            <span className="text-[#000] font-bold">{score}</span>
+          </p>
+          <p className="text-[18px] text-gray-700">
+            <strong>Percentage:</strong>{" "}
+            <span className="text-[#000] font-bold">
+              {(
+                (Number(correctAnswers) /
+                  (Number(correctAnswers) + Number(incorrectAnswers))) *
+                100
+              ).toFixed(2)}
+              % <span className="text-[14px] text-[#6c6c6c]">Correct</span>
+            </span>
           </p>
 
           <InstanceStats

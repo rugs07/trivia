@@ -43,6 +43,10 @@ const GamePage = () => {
     return () => clearInterval(countdown);
   }, [timer, isFirstQuestion, difficulty]);
 
+  useEffect(() => {
+    resetTimer();
+  }, [difficulty]);
+
   const fetchRandomQuestion = async () => {
     try {
       setLoading(true);
