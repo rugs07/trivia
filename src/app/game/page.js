@@ -74,27 +74,31 @@ const GamePage = () => {
       setLoading(true);
       const initialTimer =
         difficulty === "easy" ? 0 : difficulty === "medium" ? 30 : 15;
-
+  
       if (!isFirstQuestion) {
         setTimer(initialTimer);
       }
+  
+      // const res = await fetch('/api/countries'); 
       const res = await fetch("https://restcountries.com/v3.1/all");
+      console.log({res});
       const countries = await res.json();
       const randomCountry =
         countries[Math.floor(Math.random() * countries.length)];
-
+  
       setQuestion(randomCountry);
       setOptions(generateOptions(randomCountry, countries));
-
+  
       if (isFirstQuestion) {
         setIsFirstQuestion(false);
       }
     } catch (error) {
       console.error("Error loading data", error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
+  
 
   const generateOptions = (correct, countries) => {
     const options = [correct.name.common];
